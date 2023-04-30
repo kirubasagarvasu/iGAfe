@@ -1,0 +1,2 @@
+init_device(platform="Windows",uuid="123456")
+connect_device("Windows:///123456")

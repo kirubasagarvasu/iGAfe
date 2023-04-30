@@ -1,0 +1,35 @@
+{
+  "Game": "Sudoku Online",
+  "Tests": [
+    {
+      "TestID": "TC001",
+      "TestDescription": "E2E - Game Menu Validation",
+      "ExecutionFlag": false
+    },
+    {
+      "TestID": "TC002",
+      "TestDescription": "E2E - Game Play Validation",
+      "ExecutionFlag": false
+    },
+    {
+      "TestID": "TC003",
+      "TestDescription": "E2E - Solve Sudoku",
+      "ExecutionFlag": false
+    },
+    {
+      "TestID": "TC004",
+      "TestDescription": "E2E - Solve Sudoku Web with Invalid grid",
+      "ExecutionFlag": false
+    },
+    {
+      "TestID": "TC005",
+      "TestDescription": "E2E - Solve Sudoku Web",
+      "ExecutionFlag": true
+    },
+    {
+      "TestID": "TC006",
+      "TestDescription": "E2E - Solve Sudoku Web -Human",
+      "ExecutionFlag": false
+    }
+  ]
+}
