@@ -6,6 +6,8 @@ from airtest.core.api import *
 from pathlib import Path
 from shutil import copy
 
+from future.moves import sys
+
 
 class ReportingEngine():
     startTime = None
@@ -80,24 +82,28 @@ class ReportingEngine():
         print("\033[91m" + stepDescription + "\033[0m")
 
     def addStep(self, stepDescription, stepStatus):
-        step = None
-        if stepStatus == 'Info':
-            step = {
-                "Description": stepDescription,
-                "Status": stepStatus,
-                "ScreenshotPath": ''}
-            self.currentTest["Steps"].append(step)
-        else:
-            snapshot(
-                filename=self.grandparent_dir + r"\\Report\\" + ReportingEngine.reportFolder + r"\\screenshots\\" + self.currentTest[
-                    'ID'] + '_' + str(self.screenShotNum) + '.png', msg="test")
-            step = {
-                "Description": stepDescription,
-                "Status": stepStatus,
-                "ScreenshotPath": 'screenshots/' + self.currentTest['ID'] + '_' + str(self.screenShotNum) + '.png'}
-            self.screenShotNum += 1
-            self.currentTest["Steps"].append(step)
-
+        try:
+            step = None
+            if stepStatus == 'Info':
+                step = {
+                    "Description": stepDescription,
+                    "Status": stepStatus,
+                    "ScreenshotPath": ''}
+                self.currentTest["Steps"].append(step)
+            else:
+                snapshot(
+                    filename=self.grandparent_dir + r"/Report/" + ReportingEngine.reportFolder + r"/screenshots/" + self.currentTest[
+                        'ID'] + '_' + str(self.screenShotNum) + '.png', msg="test")
+                step = {
+                    "Description": stepDescription,
+                    "Status": stepStatus,
+                    "ScreenshotPath": 'screenshots/' + self.currentTest['ID'] + '_' + str(self.screenShotNum) + '.png'}
+                self.screenShotNum += 1
+                self.currentTest["Steps"].append(step)
+        except ValueError as e:
+            print(f"ValueError occurred: {e} at line {sys.exc_info()[-1].tb_lineno}")
+        except Exception as e:
+            print(f"An exception occurred: {e} at line {sys.exc_info()[-1].tb_lineno}")
     def generateReport(self):
         self.generateJSONReport()
         self.generateHTMLReport()
