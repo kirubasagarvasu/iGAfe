@@ -35,7 +35,10 @@ class ReportingEngine():
     def createReportDirectory(self):
         ReportingEngine.reportFolder = str(datetime.now().strftime("Report_%b_%d_%Y_%I_%M_%S_%p"))
         parent_dir = self.grandparent_dir + r"\Report"
-        src_path = self.grandparent_dir + r"\.\.\resources\report"
+        # src_path = self.grandparent_dir + r"\.\.\resources\report"
+        src_path = os.path.join(self.grandparent_dir, "iGafe" if os.path.exists(
+            os.path.join(self.grandparent_dir, "iGafe")) else "iGafe_Sudoku", "resources", "report")
+
         dst_path = os.path.join(parent_dir, ReportingEngine.reportFolder)
         shutil.copytree(src_path, dst_path)
 
