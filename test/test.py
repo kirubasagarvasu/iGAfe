@@ -22,8 +22,9 @@ from scenarios.SolveSuduko_Human import SudukoSolverHuman
 current_file = __file__
 
 # Get the path of the parent directory
-parent_directory = os.path.dirname(current_file)
-jsonFile = open(f'{parent_directory}/data/test.json')
+parent_directory = os.path.dirname(os.path.abspath(current_file))
+gparent_directory = os.path.dirname(parent_directory)
+jsonFile = open(f'{gparent_directory}/data/test.json')
 testData = json.load(jsonFile)
 
 
