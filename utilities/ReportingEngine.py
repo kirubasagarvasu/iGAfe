@@ -91,9 +91,16 @@ class ReportingEngine():
                     "ScreenshotPath": ''}
                 self.currentTest["Steps"].append(step)
             else:
-                snapshot(
-                    filename=self.grandparent_dir + r"/Report/" + ReportingEngine.reportFolder + r"/screenshots/" + self.currentTest[
-                        'ID'] + '_' + str(self.screenShotNum) + '.png', msg="test")
+                # snapshot(
+                #     filename=self.grandparent_dir + r"/Report/" + ReportingEngine.reportFolder + r"/screenshots/" + self.currentTest[
+                #         'ID'] + '_' + str(self.screenShotNum) + '.png', msg="test")
+                screenshots_dir = os.path.join(self.grandparent_dir, "Report", ReportingEngine.reportFolder,
+                                               "screenshots")
+                if not os.path.exists(screenshots_dir):
+                    os.makedirs(screenshots_dir)
+                filename = os.path.join(screenshots_dir, f"{self.currentTest['ID']}_{self.screenShotNum}.png")
+                snapshot(filename=filename, msg="test")
+
                 step = {
                     "Description": stepDescription,
                     "Status": stepStatus,
