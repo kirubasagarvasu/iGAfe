@@ -3,6 +3,11 @@ __author__ = "I3089"
 
 from airtest.core.api import *
 import json
+import os
+
+
+# import sys
+# sys.path.append('/path/to/parent/directory')
 
 from base.BaseClass import BaseClass
 from keywords.GUIKeywordsClass import GUIKeywords
@@ -13,7 +18,12 @@ from scenarios.SolveSudukoWeb01 import SudukoSolverWeb
 from scenarios.SolveSudukoWeb02 import SudukoSolverWeb02
 from scenarios.SolveSuduko_Human import SudukoSolverHuman
 
-jsonFile = open('../data/test.json')
+# Get the path of the current file
+current_file = __file__
+
+# Get the path of the parent directory
+parent_directory = os.path.dirname(current_file)
+jsonFile = open(f'{parent_directory}/data/test.json')
 testData = json.load(jsonFile)
 
 
