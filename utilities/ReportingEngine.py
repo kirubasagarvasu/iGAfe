@@ -89,7 +89,7 @@ class ReportingEngine():
             self.currentTest["Steps"].append(step)
         else:
             snapshot(
-                filename=self.grandparent_dir + r"\Report/" + ReportingEngine.reportFolder + '\screenshots/' + self.currentTest[
+                filename=self.grandparent_dir + r"\\Report\\" + ReportingEngine.reportFolder + r"\\screenshots\\" + self.currentTest[
                     'ID'] + '_' + str(self.screenShotNum) + '.png', msg="test")
             step = {
                 "Description": stepDescription,
