@@ -35,7 +35,7 @@ class ReportingEngine():
     def createReportDirectory(self):
         ReportingEngine.reportFolder = str(datetime.now().strftime("Report_%b_%d_%Y_%I_%M_%S_%p"))
         parent_dir = self.grandparent_dir + r"\Report"
-        src_path = self.grandparent_dir + r"\iGafe\resources\report"
+        src_path = self.grandparent_dir + r"\.\.\resources\report"
         dst_path = os.path.join(parent_dir, ReportingEngine.reportFolder)
         shutil.copytree(src_path, dst_path)
 
