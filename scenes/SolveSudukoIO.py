@@ -1,6 +1,8 @@
 from airtest.core.api import *
 
 from poco.drivers.unity3d import UnityPoco
+from selenium.common import NoSuchElementException
+
 from base.BaseClass import BaseClass
 from keywords.GUIKeywordsClass import GUIKeywords
 from selenium import webdriver
@@ -14,7 +16,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 import time
-
 
 M = 9
 box = []
@@ -48,7 +49,7 @@ class SolveSudukoWeb(BaseClass):
         # driver.find_element(By.XPATH, "//a[@aria-label='dismiss cookie message']")
         driver.maximize_window()
 
-    def get_sudoku_board(self ,puzzlegrid):
+    def get_sudoku_board(self, puzzlegrid):
         # puzzle = [[] for _ in range(len(puzzle))]
         # puzzle.clear()
         # for sublst in puzzle:
@@ -163,7 +164,6 @@ class SolveSudukoWeb(BaseClass):
 
         self.stepPass("Solved the sudoku grid")
 
-
     def fill_puzzle(self):
         for i in range(9):
             for j in range(9):
@@ -187,14 +187,16 @@ class SolveSudukoWeb(BaseClass):
                 invalid = "invalid" in cell.get_attribute("class").strip()
                 value = str(solvedGrid[i][j])
                 if i == 8 & j == 8:
+                    self.stepInfo("Completed the Sudoku Grid")
                     self.stepPass(str(solvedGrid))
                 if text != value:
                     time.sleep(5)
-    
+
                     cell.click()
                     delete.click()
                     # cell.clear()
                     cell.send_keys(value)
+                    self.stepPass(f"Invalid number:{text}.The value is fixed with valid number:{value} in cell:{i},{j}")
 
     def fill_puzzle_incremented(self, lst1, lst2):
         inc_result = self.compare_lists(lst1, lst2)
@@ -217,18 +219,69 @@ class SolveSudukoWeb(BaseClass):
                     cell.send_keys(value)
 
     def validateSolution(self):
+        well_done = '//div[@id ="victory-screen"]//span[@id="well-done"]'
+        if self.is_element_present("xpath",well_done):
+            self.stepPass("Success message 'Well Done' is displayed")
+            self.stepInfo("Validate Sudoku Solving Time")
+            solTime = driver.find_element(By.XPATH, '//div[@id="final-time-total"]').text
+            self.stepPass("The total time to solve is " + solTime)
+            self.stepInfo("End of execution")
+        else:
+            self.stepFail("Unable to validate execution time")
+            # self.stepPass(driver.find_element(By.XPATH, '//div[@id ="victory-screen"]//span[@id="well-done"]').text)
 
-        self.stepPass(driver.find_element(By.XPATH, '//div[@id ="victory-screen"]//span[@id="well-done"]').text)
-        self.stepInfo("Validate Sudoku Solving Time")
-        solTime = driver.find_element(By.XPATH, '//div[@id="final-time-total"]').text
-        self.stepPass("The total time to solve is " + solTime)
-        self.stepInfo("End of execution")
 
     def captureGrid(self):
         sudoku_grid = driver.find_element(By.XPATH, '//div[@id="sudoku"]')
         with open('Sudoku_grid.png', 'wb') as file:
             sudoku_png = sudoku_grid.screenshot_as_png
             file.write(sudoku_png)
+
+    def captureAllGridValues(self):
+
+        grid = [[0 for j in range(9)] for i in range(9)]
+
+        for i in range(0, 9):
+            for j in range(0, 9):
+                cell_id = "//div[@data-row='{}' and @data-column='{}']".format(i, j)
+                cell = driver.find_element(By.XPATH, cell_id)
+                number = cell.get_attribute("data-value")
+
+                if number == "":
+                    number = "0"
+
+                grid[i - 1][j - 1] = int(number)
+
+        self.stepPass(str(grid))
+        return grid
+
+    def is_element_present(self, locator_type, locator_value):
+        """
+        Check if an element is present on the page using different locator types.
+        :param locator_type: type of locator e.g. "xpath", "id", "name", etc.
+        :param locator_value: value of locator e.g. "//div[@class='example']", "username", etc.
+        :return: True if element is present, False otherwise.
+        """
+        try:
+            if locator_type == "xpath":
+                driver.find_element(By.XPATH, locator_value)
+            elif locator_type == "id":
+                driver.find_element(By.ID, locator_value)
+            elif locator_type == "name":
+                driver.find_element(By.NAME, locator_value)
+            elif locator_type == "class":
+                driver.find_element(By.CLASS_NAME, locator_value)
+            elif locator_type == "tag":
+                driver.find_element(By.TAG_NAME, locator_value)
+            elif locator_type == "link_text":
+                driver.find_element(By.LINK_TEXT, locator_value)
+            elif locator_type == "partial_link_text":
+                driver.find_element(By.PARTIAL_LINK_TEXT, locator_value)
+            else:
+                raise ValueError("Invalid locator type: {}".format(locator_type))
+        except NoSuchElementException:
+            return False
+        return True
 
     def increment_list(self):
         """Increments the first 5 occurrences of 0 in the list"""
@@ -698,7 +751,7 @@ class SolveSudukoWeb(BaseClass):
 
         return None
 
-    def sudokuSolverHmn99(self, lst):
+    def FillSudokuWithPossibleValues(self, lst):
         (i, j) = self.findNew(lst, 0)
         if (i, j) == (-1, -1):
             return self.printSol(lst)
@@ -729,9 +782,10 @@ class SolveSudukoWeb(BaseClass):
                     self.tried_cells.add((i, j))
                     cell = driver.find_element(By.XPATH, cell_id)
                     cell.send_keys(lst[i][j])
+                    time.sleep(3)
 
-                if self.sudokuSolverHmn99(lst):
-                    return self.sudokuSolverHmn99(lst)
+                if self.FillSudokuWithPossibleValues(lst):
+                    return self.FillSudokuWithPossibleValues(lst)
 
                 if (i, j) not in self.tried_cells and original_value == 0:
                     self.tried_cells.remove((i, j))
@@ -863,5 +917,3 @@ class SolveSudukoWeb(BaseClass):
             self.stepFail("The invalid numbers present in the cells" + str(invalid_cells_list))
         else:
             self.stepPass("The Sudoku grid doesn't have any invalid numbers")
-
-
