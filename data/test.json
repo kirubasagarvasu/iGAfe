@@ -18,7 +18,7 @@
     },
     {
       "TestID": "TC004",
-      "TestDescription": "E2E - Solve Sudoku Web with Invalid grids",
+      "TestDescription": "E2E - Solve Sudoku Web with Invalid grid",
       "ExecutionFlag": false
     },
     {
