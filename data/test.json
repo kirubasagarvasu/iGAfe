@@ -23,13 +23,13 @@
     },
     {
       "TestID": "TC005",
-      "TestDescription": "E2E - Solve Sudoku Web",
+      "TestDescription": "E2E - Solve Sudoku using algorithm",
       "ExecutionFlag": true
     },
     {
       "TestID": "TC006",
-      "TestDescription": "E2E - Solve Sudoku Web -Human",
-      "ExecutionFlag": false
+      "TestDescription": "E2E - Solve Sudoku using possible values",
+      "ExecutionFlag": true
     }
   ]
 }
