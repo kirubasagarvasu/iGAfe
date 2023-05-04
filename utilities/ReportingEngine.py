@@ -202,6 +202,26 @@ class ReportingEngine():
                             }, 500);
                         }
 	                </script>
+                    <style>
+                       
+                
+                        .number {
+                            position: absolute;
+                            top: -100px;
+                            animation: fall 5s linear infinite;
+                            z-index : -1
+                        }
+                      
+                
+                        @keyframes fall {
+                            0% {
+                                transform: translateY(-100px) rotate(0deg);
+                            }
+                            100% {
+                                transform: translateY(calc(100vh + 100px)) rotate(360deg);
+                            }
+                        }
+                    </style>
 
                 <title>HTML REPORTING</title>
                 <body >          
@@ -244,9 +264,9 @@ class ReportingEngine():
 						<img src="Logos/5.jpg" alt="Number 5">
                         </div> -->
                         
-                    <div  class='dragon_container'>
+                     <!--<div  class='dragon_container'>
                         <div class='dragon' style=" background-image: url('Logos/dragon.gif'); background-repeat: no-repeat; "></div>
-                      </div>
+                      </div>-->
                 
                       <!--<div id='thunder_gif'style=" background-image: url('Logos/thunder.gif'); background-repeat: no-repeat; "></div>
                       <div class='fire_container'>
@@ -254,7 +274,24 @@ class ReportingEngine():
                             <img src='Logos/fire.gif' alt="fire Image 2">
                             <img src='Logos/fire.gif' alt="fire Image 3">
                             <img src='Logos/fire.gif' alt="fire Image 4">
-                      </div>   -->                
+                      </div>   -->  
+                      
+                        <img class="number" src="images/0.png" style="animation-delay: 1.2s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/1.png" style="animation-delay: 1.5s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/2.png" style="animation-delay: 1.1s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/3.png" style="animation-delay: 2.3s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/4.png" style="animation-delay: 2.0s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/5.png" style="animation-delay: 2.8s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/6.png" style="animation-delay: 0.5s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/7.png" style="animation-delay: 0.9s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/8.png" style="animation-delay: 0.1s;width: 50px; height: 50px;"/>
+                        <img class="number" src="images/9.png" style="animation-delay: 3.5s;width: 50px; height: 50px;"/>
+                    <script>
+                        const numbers = document.querySelectorAll(".number");
+                        numbers.forEach(function(number) {
+                            number.style.left = Math.random() * (window.innerWidth - number.clientWidth) + "px";
+                        });
+                    </script>           
                 </body>
                 <script type='text/javascript' src='./Extras/canvasjs.min.js'></script>
                 <script src="Extras/snowfall.min.js"></script>

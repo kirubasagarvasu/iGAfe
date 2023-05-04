@@ -13,6 +13,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+import time
+
 
 M = 9
 box = []
@@ -187,6 +189,8 @@ class SolveSudukoWeb(BaseClass):
                 if i == 8 & j == 8:
                     self.stepPass(str(solvedGrid))
                 if text != value:
+                    time.sleep(5)
+    
                     cell.click()
                     delete.click()
                     # cell.clear()
@@ -736,6 +740,53 @@ class SolveSudukoWeb(BaseClass):
         # self.stepPass("Filled the empty cells with possible values")
         return None
 
+    def sudokuSolverParallel(self, lst):
+        (i, j) = self.findNew(lst, 0)
+        if (i, j) == (-1, -1):
+            return self.printSol(lst)
+
+        excludedNums = set()
+        for row in range(rows):
+            for col in range(cols):
+                if lst[row][col] != 0:
+                    if i == row or j == col or (i // 3 == row // 3 and j // 3 == col // 3):
+                        excludedNums.add(lst[row][col])
+
+        possibleNums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        original_value = lst[i][j]
+        if original_value != 0:
+            self.tried_cells.add((i, j))
+        else:
+            remaining_nums = [num for num in possibleNums if num not in excludedNums]
+            if not remaining_nums:
+                return None  # No remaining numbers, backtrack
+
+            for possible_num in remaining_nums:
+                lst[i][j] = possible_num  # Fill the current empty cell with a possible number
+
+                if (i, j) not in self.tried_cells and original_value == 0:
+                    cell_id = "//div[@data-row='{}' and @data-column='{}']".format(i, j)
+                    self.stepInfo("Filling cell ({}, {}) with value {}".format(i, j, lst[i][j]))
+                    self.tried_cells.add((i, j))
+                    cell = driver.find_element(By.XPATH, cell_id)
+                    cell.send_keys(str(lst[i][j]))
+
+                if self.sudokuSolverParallel(lst):
+                    return self.sudokuSolverParallel(lst)
+
+                if (i, j) not in self.tried_cells and original_value == 0:
+                    self.tried_cells.remove((i, j))
+
+                lst[i][j] = 0  # Reset the value of the current cell to 0 and backtrack
+
+                if original_value == 0:
+                    cell_id = "//div[@data-row='{}' and @data-column='{}']".format(i, j)
+                    self.stepInfo("Resetting cell ({}, {}) to 0".format(i, j))
+                    cell = driver.find_element(By.XPATH, cell_id)
+                    cell.clear()
+
+        return None
+
     def excludedNums(self, row, col, lst):
         excluded = set()
         for r in range(rows):
@@ -803,5 +854,14 @@ class SolveSudukoWeb(BaseClass):
         invalidcells = driver.find_elements(By.XPATH, "//div[contains(@class,'cell invalid')]")
         if len(invalidcells) > 0:
             self.stepInfo("The Sudoku grid has some invalid numbers")
+            invalid_cells_list = []
+            for cell in invalidcells:
+                row = int(cell.get_attribute('data-row'))
+                col = int(cell.get_attribute('data-column'))
+                invalid_cells_list.append((row, col))
+            print(str(invalid_cells_list))
+            self.stepFail("The invalid numbers present in the cells" + str(invalid_cells_list))
         else:
             self.stepPass("The Sudoku grid doesn't have any invalid numbers")
+
+

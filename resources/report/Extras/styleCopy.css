@@ -7,6 +7,7 @@ body {
 #bg{
 	height : 100%;
 	 animation: bg-animation 5s infinite alternate;
+	 filter: blur(5px);
 }
 
 @keyframes bg-animation {

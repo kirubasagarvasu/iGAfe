@@ -37,6 +37,7 @@ class SudukoSolverHuman(BaseClass):
         initial_puzzle = [row[:] for row in puzzleHuman]
 
         sudoScene.sudokuSolverHmn99(puzzleHuman) #  fills the grid first but doesn't solve it
+        # sudoScene.sudokuSolverParallel(puzzleHuman)
         # sudoScene.solveSudokuHuman(puzzle)
         # sudoScene.captureGrid()
         # sudoScene.get_sudoku_board_Human()
